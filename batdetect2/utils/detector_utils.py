@@ -421,9 +421,6 @@ def compute_spectrogram(
         The duration of the spectrgram in seconds.
     spec : torch.Tensor
         The spectrogram as a torch tensor.
-    spec_np : np.ndarray, optional
-        The spectrogram as a numpy array. Only returned if `return_np` is
-        True, otherwise None.
     """
     # pad audio so it is evenly divisible by downsampling factors
     duration = audio.shape[0] / float(sampling_rate)

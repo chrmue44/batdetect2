@@ -33,6 +33,10 @@ def generate_train_example(
     target_sigma: float = TARGET_SIGMA,
 ) -> xr.Dataset:
     """Generate a training example."""
+    #prevent crash with clips that have a too short duration
+    clip_len = (clip_annotation.clip.end_time - clip_annotation.clip.start_time) * preprocessing_config.target_samplerate  #@@@
+    if clip_len < preprocessing_config.fft_win_length:
+        return None
     spectrogram = preprocess_audio_clip(
         clip_annotation.clip,
         config=preprocessing_config,
@@ -66,6 +70,9 @@ def save_to_file(
     dataset: xr.Dataset,
     path: PathLike,
 ) -> None:
+#    comp = dict(zlib=True, complevel=5)    #@@@
+#    encoding = {var: comp for var in dataset.data_vars} #@@@  https://stackoverflow.com/questions/40766037/specify-encoding-compression-for-many-variables-in-xarray-dataset-when-write-to
+#    dataset.to_netcdf(path, encoding)              #@@@
     dataset.to_netcdf(
         path,
         encoding={
@@ -74,6 +81,7 @@ def save_to_file(
             "class": {"zlib": True},
             "detection": {"zlib": True},
         },
+        engine="h5netcdf"
     )
 
 
@@ -109,7 +117,7 @@ def preprocess_single_annotation(
     target_sigma: float = TARGET_SIGMA,
 ) -> None:
     output_dir = Path(output_dir)
-
+#    print("preprocess", clip_annotation.clip.recording.path)   #@@@
     filename = filename_fn(clip_annotation)
     path = output_dir / filename
 
@@ -125,8 +133,8 @@ def preprocess_single_annotation(
         preprocessing_config=config,
         target_sigma=target_sigma,
     )
-
-    save_to_file(sample, path)
+    if sample != None:
+        save_to_file(sample, path)
 
 
 def preprocess_annotations(

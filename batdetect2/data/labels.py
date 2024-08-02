@@ -92,7 +92,11 @@ def generate_heatmaps(
         )
 
         # Get the class name of the sound event
-        class_name = class_mapper.transform(sound_event_annotation)
+        id = class_mapper.transform(sound_event_annotation)
+        if id is None:
+            # If the label is None skip the sound event
+            continue
+        class_name = class_mapper.class_labels[id]
 
         if class_name is None:
             # If the label is None skip the sound event

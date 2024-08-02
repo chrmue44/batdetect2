@@ -164,7 +164,8 @@ class FileAnnotation(BaseModel):
 def load_file_annotation(path: PathLike) -> FileAnnotation:
     """Load annotation from batdetect format."""
     path = Path(path)
-    return FileAnnotation.model_validate_json(path.read_text())
+    file_ann = FileAnnotation.model_validate_json(path.read_text())
+    return file_ann
 
 
 def annotation_to_sound_event(
@@ -216,6 +217,10 @@ def file_annotation_to_clip(
         full_path,
         time_expansion=file_annotation.time_exp,
     )
+    
+    if recording.duration < 0.003:
+        raise FileNotFoundError(f"recording too short: {full_path}, dismissed, duration too short {recording.duration}")
+        
 
     return data.Clip(
         uuid=uuid.uuid5(NAMESPACE, f"{file_annotation.id}_clip"),

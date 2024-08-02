@@ -18,9 +18,18 @@ from batdetect2.models.post_process import (
 )
 from batdetect2.models.typing import FeatureExtractorModel, ModelOutput
 from batdetect2.train import losses
+from batdetect2.train.preprocess import load_config
 from batdetect2.train.dataset import TrainExample
 
+from torchmetrics.classification import ConfusionMatrix
 
+class IntHandler:
+    def legend_artist(self, legend, orig_handle, fontsize, handlebox):
+        x0, y0 = handlebox.xdescent, handlebox.ydescent
+        text = plt.matplotlib.text.Text(x0, y0, str(orig_handle))
+        handlebox.add_artist(text)
+        return text
+        
 class DetectorModel(L.LightningModule):
     def __init__(
         self,
@@ -43,7 +52,7 @@ class DetectorModel(L.LightningModule):
         self.input_height = input_height
         self.num_features = num_features
         self.num_classes = class_mapper.num_classes
-
+#        self.conf_matrix = ConfusionMatrix(task='multiclass', num_classes=num_features)
         self.feature_extractor = feature_extractor_class(
             input_height=input_height,
             num_features=num_features,
@@ -63,6 +72,9 @@ class DetectorModel(L.LightningModule):
             padding=0,
         )
 
+    def load_preprocessing_config(self, path):
+        self.preprocessing_config = load_config(path)
+        
     def forward(self, spec: torch.Tensor) -> ModelOutput:  # type: ignore
         features = self.feature_extractor(spec)
         classification_logits = self.classifier(features)
@@ -123,16 +135,29 @@ class DetectorModel(L.LightningModule):
         )
 
         return detection_loss + size_loss + classification_loss
-
+ 
+        
     def training_step(  # type: ignore
         self,
         batch: TrainExample,
     ):
         outputs = self.forward(batch.spec)
         loss = self.compute_loss(outputs, batch)
-        self.log("train_loss", loss)
+        self.log("train_loss", loss, prog_bar=True)
         return loss
-
+        
+    def validation_step(self, batch, batch_idx):   # inspired by https://lightning.ai/docs/pytorch/stable/common/evaluation_basic.html
+        # this is the validation loop
+        outputs = self.forward(batch.spec)
+        val_loss = self.compute_loss(outputs, batch)
+        self.log("val_loss", val_loss, prog_bar=True)
+        
+    def test_step(self, batch, batch_idx):   # inspired by https://lightning.ai/docs/pytorch/stable/common/evaluation_basic.html
+        # this is the test loop
+        outputs = self.forward(batch.spec)
+        test_loss = self.compute_loss(outputs, batch)
+        self.log("test_loss", test_loss, prog_bar=True)
+        
     def configure_optimizers(self):
         optimizer = optim.Adam(self.parameters(), lr=self.learning_rate)
         scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, 100)
