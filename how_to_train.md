@@ -42,20 +42,20 @@ It was tested on a Windows 10 system.
 	- min_freq must be lower than the lowest annotated frequency used during annotation (lower margin of bounding box)
 	- duration must be slightly longer than selected clip length (in this case 1s --> duration = 1.05)
 
-		config = PreprocessingConfig(
-			target_samplerate=256_000,  # Target sample rate for resampling audio
-			scale_audio=False,  # Whether to scale the raw audio values to -1,-1 range
-			fft_win_length=512 / 256_000,  # Window length for FFT in seconds
-			fft_overlap=0.75,  # Overlap between FFT windows
-			max_freq=120_000,  # Maximum frequency to include in spectrogram
-			min_freq=200,  # Minimum frequency to include in spectrogram
-			spec_scale="pcen",  # Spectrogram scaling method ("pcen", "db", or None)
-			denoise_spec_avg=True,  # Whether to apply spectral denoising
-			max_scale_spec=False,  # Whether to max-scale the spectrogram
-			duration=1.05,  # Duration (in seconds) of each training example
-			spec_height=128,  # Height of the spectrogram (number of frequency bins)
-			spec_time_period=0.001,  # Time resolution of the spectrogram (seconds per pixel)
-    )
+			config = PreprocessingConfig(
+				target_samplerate=256_000,  # Target sample rate for resampling audio
+				scale_audio=False,  # Whether to scale the raw audio values to -1,-1 range
+				fft_win_length=512 / 256_000,  # Window length for FFT in seconds
+				fft_overlap=0.75,  # Overlap between FFT windows
+				max_freq=120_000,  # Maximum frequency to include in spectrogram
+				min_freq=200,  # Minimum frequency to include in spectrogram
+				spec_scale="pcen",  # Spectrogram scaling method ("pcen", "db", or None)
+				denoise_spec_avg=True,  # Whether to apply spectral denoising
+				max_scale_spec=False,  # Whether to max-scale the spectrogram
+				duration=1.05,  # Duration (in seconds) of each training example
+				spec_height=128,  # Height of the spectrogram (number of frequency bins)
+				spec_time_period=0.001,  # Time resolution of the spectrogram (seconds per pixel)
+    			)			
 	
 - setup the root path name for wav files and annotation files in file convert_annotations_old_to_new.py (around line 60)
 
@@ -67,7 +67,7 @@ It was tested on a Windows 10 system.
 		
 - run script convert_annotations_old_to_new.py
 	
-	python convert_annotations_old_to_new.py
+		python convert_annotations_old_to_new.py
 	
 - after finishing the script the folder <selectedRootPath>/"preprocessed" should be created and contain data files (*.nc)
 
@@ -88,6 +88,6 @@ It was tested on a Windows 10 system.
 
 		tensorboard  --logdir=<rootPath>/preprocessed/lightning_logs
 		
-- open web browser and got to page localhost:6006
+- open web browser and go to page localhost:6006
 
  
