@@ -81,6 +81,11 @@ It was tested on a Windows 10 system.
 
 		pip install -r requirements.txt
 
+- install PyQt for using mathplotlib on the command line
+
+		pip install PyQt6
+
+
 ### Training
 
 - run training.py 
@@ -91,3 +96,6 @@ It was tested on a Windows 10 system.
 - open web browser and go to page localhost:6006
 
  
+### Verification
+
+- run predict.py

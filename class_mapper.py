@@ -56,3 +56,10 @@ class Mapper(ClassMapper):
             return [data.Tag(key="event", value="social")]
 
         return [data.Tag(key="class", value=class_name)]        
+
+    def create_tags(self):
+        tags = []
+        for label in self.class_labels:
+            tags.append(data.Tag(key="class", value=label))
+        return tags
+
