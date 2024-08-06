@@ -10,8 +10,8 @@ class Mapper(ClassMapper):
 
     # List of all possible classes the model can predict
     class_labels = [
-        "social", 
-        "feeding",
+        "Social", 
+        "Feeding",
         "Barbastella barbastellus",
         "Eptesicus nilssonii",
         "Eptesicus serotinus",
@@ -28,7 +28,6 @@ class Mapper(ClassMapper):
         "Pipistrellus pipistrellus",
         "Pipistrellus pygmaeus",
         "Vespertilio murinus",
-        "unknown"
     ]
 
     # Classify a given sound event annotation
@@ -39,15 +38,17 @@ class Mapper(ClassMapper):
 
         # If it's a social call, return "social" as the class
         if event_tag.value == "Social":
-            return "social"
+            return "Social"
         if event_tag.value == "Feeding":
-            return "feeding"
+            return "Feeding"
         # If it's not an echolocation call, ignore it
         if event_tag.value != "Echolocation":
             return None
 
         # Extract the "class" tag (species) for echolocation calls
         species_tag = data.find_tag(x.tags, "class")
+        if species_tag.value.lower() == "unknown":
+            return None
         return species_tag.value
 
     # Convert a class prediction back into annotation tags

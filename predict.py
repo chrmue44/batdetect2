@@ -28,7 +28,7 @@ class BatDetect2Predict:
     def __init__(self):
         self.parent_dir = "F:/bat/trainingBd2"
         self.checkpoint_dir = self.parent_dir + "/preprocessed"
-        self.checkpoint = self.checkpoint_dir + "/lightning_logs/version_9/checkpoints/epoch=15-step=1600.ckpt"
+        self.checkpoint = self.checkpoint_dir + "/lightning_logs/version_19/checkpoints/epoch=10-step=1100.ckpt"
         self.pre_proc_cfg_path = self.checkpoint_dir + "/config.json" 
         self.mapper = Mapper()
         

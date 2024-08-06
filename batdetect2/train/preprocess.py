@@ -41,6 +41,11 @@ def generate_train_example(
         clip_annotation.clip,
         config=preprocessing_config,
     )
+    
+    #due to rounding effects during the generation of spectrograms from different sampling rates the length of the 
+    # resulting spectrograms differ sligthly. Set them all to the same length
+    max_len = int(preprocessing_config.duration * 1000)
+    spectrogram = spectrogram[:,:max_len]
 
     detection_heatmap, class_heatmap, size_heatmap = generate_heatmaps(
         clip_annotation,

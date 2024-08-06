@@ -16,19 +16,27 @@ from batdetect2.train.augmentations import (
 from batdetect2.train.dataset import LabeledDataset, get_files
 from batdetect2.train.preprocess import PreprocessingConfig
 from class_mapper import Mapper
+import numpy
+
+def seed_worker(worker_id):
+    worker_seed = torch.initial_seed() % 2**32
+    numpy.random.seed(worker_seed)
+ #   random.seed(worker_seed)
 
 class BatDetect2Trainer:
     def __init__(self):
         self.parent_dir = "F:/bat/trainingBd2"
         self.test_set_portion = 0.1
         self.checkpoint_dir = self.parent_dir + "/preprocessed"
-        self.epochs = 40
-        self.checkpoint = self.checkpoint_dir + "/lightning_logs/version_3/checkpoints/epoch=19-step=2000.ckpt"
+        self.epochs = 60
+        self.learning_rate = 0.0003
+#        self.checkpoint = self.checkpoint_dir + "/lightning_logs/version_3/checkpoints/epoch=19-step=2000.ckpt"
         self.pre_proc_cfg_path = self.checkpoint_dir + "/config.json" 
         self.train_dataset = None
         self.test_dataset = None
         self.valid_dataset = None
         self.train_dataloader = None
+
         
     def prepare_data(self):
         """read the prepared test data and split it to train, valid and test set"""
@@ -54,32 +62,43 @@ class BatDetect2Trainer:
         print("sizes:   train set:{} validation set:{}  test set:{}".format(train_set_size, valid_set_size, test_set_size))        
         print(self.valid_dataset)
 
-        self.train_dataloader = DataLoader(
-            self.train_dataset
-            ,shuffle=True,
-#            batch_size=32,
-            num_workers=15,
-            persistent_workers=True,
-        )
+ #       g = torch.Generator()
+ #       g.manual_seed(0)
 
-        self.valid_dataloader = DataLoader(
-            self.valid_dataset
-            ,shuffle=False,
-#            batch_size=32,
-            num_workers=15,
+
+        self.train_dataloader = DataLoader(
+            self.train_dataset,
+            shuffle=True,
+            batch_size=64,
+            num_workers=4,
             persistent_workers=True,
+#            worker_init_fn = seed_worker,
+#            generator = g,
+        )
+            
+        self.valid_dataloader = DataLoader(
+            self.valid_dataset,
+#            shuffle=False,
+            batch_size=64,
+            num_workers=4,
+            persistent_workers=True,
+#            worker_init_fn = seed_worker,
+#            generator = g,
         )
 
         self.test_dataloader = DataLoader(
             self.test_dataset
             ,shuffle=False,
-#           batch_size=32,
-           num_workers=15,
+           batch_size=64,
+           num_workers=4,
            persistent_workers=True,
+#            worker_init_fn = seed_worker,
+#            generator = g,
         )
 
-#        self.detector = DetectorModel(class_mapper=Mapper())
-        self.detector = DetectorModel.load_from_checkpoint(self.checkpoint)
+
+        self.detector = DetectorModel(class_mapper=Mapper(), learning_rate = self.learning_rate)
+#        self.detector = DetectorModel.load_from_checkpoint(self.checkpoint)
         self.detector.eval()
         self.detector.load_preprocessing_config(self.pre_proc_cfg_path)
         self.trainer = pl.Trainer(

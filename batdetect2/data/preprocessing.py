@@ -137,7 +137,7 @@ def preprocess_audio_clip(
         denoise_spec_avg=config.denoise_spec_avg,
         max_scale_spec=config.max_scale_spec,
     )
-
+    
     if config.duration is not None:
         spec = adjust_spec_duration(clip, spec, config.duration)
 
