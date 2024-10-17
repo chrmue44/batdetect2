@@ -1,5 +1,5 @@
 rem Name of the data set
-set DATA_SET=GermanBats03
+set DATA_SET=GermanBats11
 rem path to the folder containing the WAV files
 set AUDIO_PATH=F:\bat\trainingBd2\wav\
 rem file name of json file of training set
@@ -11,7 +11,7 @@ set OUT_PATH=F:\bat\trainingBd2\model\
 rem path to the pretrained model 
 set TRAINED_MODEL=../../models/Net2DFast_UK_same.pth.tar
 rem number of epochs
-set EPOCHS=50
+set EPOCHS=200
 rem set flag to train from scratch
 set O_SCRATCH=
 rem set O_SCRATCH=----train_from_scratch
@@ -24,3 +24,4 @@ echo python finetune_model.py %AUDIO_PATH% %TRAIN_DATA% %TEST_DATA% %TRAINED_MOD
 python finetune_model.py %AUDIO_PATH% %TRAIN_DATA% %TEST_DATA% %TRAINED_MODEL% --op_model_name %DATA_SET%.tar --num_epochs %EPOCHS% %O_SCRATCH% %O_LAST_L%
 cd ..\..
 call _venv\Scripts\deactivate.bat
+pause

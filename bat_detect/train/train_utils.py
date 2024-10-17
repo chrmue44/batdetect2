@@ -159,6 +159,7 @@ def load_anns_from_path(ann_file_dir, raw_audio_dir):
     files = glob.glob(ann_file_dir + '*.json')
     anns = []
     for ff in files:
+        print(ff)  #@@@ CMU
         with open(ff) as da:
             ann = json.load(da)
         ann['file_path'] = raw_audio_dir + ann['id']
