@@ -228,6 +228,8 @@ def pad_audio(
         div_amt = np.maximum(1, div_amt)
         target_size = int(div_amt * divide_factor * (1.0 / resize_factor))
         diff = target_size * step + noverlap - audio_raw.shape[0]
+        while diff < 0:                  # added by chrmue44
+            diff += divide_factor        # added by chrmue44
         audio_raw = np.hstack(
             (audio_raw, np.zeros(diff, dtype=audio_raw.dtype))
         )
