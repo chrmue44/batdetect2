@@ -94,9 +94,10 @@ def load_set_of_anns(data, classes_to_ignore=[], events_of_interest=None,
     # datasets, this will lilely have already been done
     if filter_issues:
         anns = [aa for aa in anns if aa['issues'] is False]
-
+  
     # check for some basic formatting errors with class names
     for ann in anns:
+        print(ann['id'])
         for aa in ann['annotation']:
             aa['class'] = aa['class'].strip()
 
@@ -146,6 +147,7 @@ def load_set_of_anns(data, classes_to_ignore=[], events_of_interest=None,
 
 
 def load_anns(ann_file_name, raw_audio_dir):
+    print("load annotation file:" , ann_file_name)
     with open(ann_file_name) as da:
         anns = json.load(da)
 

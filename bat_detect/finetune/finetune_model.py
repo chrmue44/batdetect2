@@ -175,7 +175,8 @@ if __name__ == "__main__":
             op_state = {'epoch': epoch + 1,
                         'state_dict': model.state_dict(),
                         'params' : params}
-            torch.save(op_state, params['model_file_name'])
+            file_name = params['model_file_name'] + '_' + str(epoch)
+            torch.save(op_state, file_name)
 
 
     # save an image with associated prediction for each batch in the test set

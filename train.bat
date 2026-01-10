@@ -1,5 +1,5 @@
 rem Name of the data set
-set DATA_SET=GermanBats11
+set DATA_SET=GermanBats250528
 rem path to the folder containing the WAV files
 set AUDIO_PATH=F:\bat\trainingBd2\wav\
 rem file name of json file of training set
