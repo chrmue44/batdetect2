@@ -1,4 +1,4 @@
-set DATA_SET=GermanBats250528
+set DATA_SET=GermanBats09
 set AUDIO_PATH=F:\bat\trainingBd2\wav\
 set ANN_PATH=F:\bat\trainingBd2\ann\
 set OUT_PATH=F:\bat\trainingBd2\split\

@@ -1,5 +1,5 @@
 rem Name of the data set
-set DATA_SET=GermanBats250528
+set DATA_SET=GermanBats09
 rem path to the folder containing the WAV files
 set AUDIO_PATH=F:\bat\trainingBd2\wav\
 rem file name of json file of training set
@@ -13,8 +13,8 @@ set TRAINED_MODEL=../../models/Net2DFast_UK_same.pth.tar
 rem number of epochs
 set EPOCHS=200
 rem set flag to train from scratch
-set O_SCRATCH=
-rem set O_SCRATCH=----train_from_scratch
+rem set O_SCRATCH=
+set O_SCRATCH=--train_from_scratch
 rem set flag to train only last layer
 set O_LAST_L=
 rem set O_LAST_L=--finetune_only_last_layer
