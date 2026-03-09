@@ -1,5 +1,5 @@
 rem Name of the data set
-set DATA_SET=GermanBats09
+set DATA_SET=GermanBats093
 rem path to the folder containing the WAV files
 set AUDIO_PATH=F:\bat\trainingBd2\wav\
 rem file name of json file of training set
@@ -10,6 +10,7 @@ rem path to store the result data file
 set OUT_PATH=F:\bat\trainingBd2\model\
 rem path to the pretrained model 
 set TRAINED_MODEL=../../models/Net2DFast_UK_same.pth.tar
+rem set TRAINED_MODEL=../../models/GermanBats_092.pth.tar
 rem number of epochs
 set EPOCHS=200
 rem set flag to train from scratch
